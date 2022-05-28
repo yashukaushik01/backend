@@ -14,6 +14,7 @@ export class EmployeeService {
       @InjectModel('Leave') private leaveModel: Model<LeaveDocument>
     ) {}
 
+  //Gets all employees from the database
   async getAllEmployees() : Promise<ResModel>{
     let result:ResModel;
     try {
@@ -29,6 +30,7 @@ export class EmployeeService {
     }
   }
 
+  //Finds an employee based on email from database and returns it
   async getEmployee(email: string): Promise<ResModel> {
     let result:ResModel;
     try {
@@ -44,6 +46,7 @@ export class EmployeeService {
     }
   }
 
+  //Posts employee data to db for adding new employee in employees table
   async addEmployee(completeBody: EmployeeAddModel): Promise<ResModel> {
     try {
       let empCode: any;
@@ -66,6 +69,7 @@ export class EmployeeService {
     }
   }
 
+  //Verifies user for login based on its email and password
   async verifyUser(email: string, completeBody): Promise<ResModel>{
     try{
       let result: ResModel;
@@ -88,6 +92,7 @@ export class EmployeeService {
     }
   }
 
+  //Updates the given changes in a employee in the employees table
   async updateEmployee(email: string, toUpdate: EmployeeUpdateModel): Promise<ResModel> {
     try {
       let result:ResModel;
@@ -125,6 +130,7 @@ export class EmployeeService {
     }
   }
   
+  //Deletes the employee from the employees table
   async deleteEmployee(empCode: string): Promise<ResModel>{
     try {
       let result:ResModel;

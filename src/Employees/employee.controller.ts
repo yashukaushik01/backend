@@ -9,16 +9,16 @@ import { ResModel } from 'src/app.interface';
 export class EmployeeController {
   constructor(private readonly employeeService: EmployeeService) {}
 
-  handleResponse(result: ResModel, res:Response){
+  handleStatusCode(result: ResModel, res:Response){
     switch (result.statusCode){
       case statusCode.OK:
-        res.status(200).send(result);
+        return res.status(200);
       case statusCode.CREATED:
-        res.status(201).send(result);
+        return res.status(201);
       case statusCode.NO_CONTENT:
-        res.status(204).send(result);
+        return res.status(204);
       case statusCode.Unprocessable_Entity:
-        res.status(422).send(result);
+        return res.status(422);
     }
   }
 
@@ -30,20 +30,23 @@ export class EmployeeController {
   @Get()
   async getAllEmployees(@Res() res:Response) {
     const result = await this.employeeService.getAllEmployees();
-    this.handleResponse(result, res);
+    res = this.handleStatusCode(result, res);
+    res.send(result);
   }
 
   @Get(':email')
   async getEmployee(@Param('email') email: string, @Res() res:Response) {
     const result = await this.employeeService.getEmployee(email);
-    this.handleResponse(result, res);
+    res = this.handleStatusCode(result, res);
+    res.send(result);
   }
 
   @Post()
   async addEmploye(@Body() completeBody: EmployeeAddModel, @Res() res:Response){
     if(this.validateEmail(completeBody.address.email)){
       const result = await this.employeeService.addEmployee(completeBody);
-      this.handleResponse(result, res);
+      res = this.handleStatusCode(result, res);
+      res.send(result);
     } else {
       res.send({"statusCode": 200, "message": "Provide a valid email", "model": null});
     }
@@ -52,7 +55,8 @@ export class EmployeeController {
   @Post(':email')
   async verifyUser(@Param('email') email, @Body() completeBody, @Res() res: Response){
     const result = await this.employeeService.verifyUser(email, completeBody);
-    this.handleResponse(result, res);
+    res = this.handleStatusCode(result, res);
+    res.send(result);
   }
 
   @Put(':email')
@@ -63,12 +67,14 @@ export class EmployeeController {
   ){
     console.log(toUpdate);
     const result = await this.employeeService.updateEmployee(email, toUpdate);
-    this.handleResponse(result, res);
+    res = this.handleStatusCode(result, res);
+    res.send(result);
   }
 
   @Delete(':empCode')
   async deleteEmployee(@Param('empCode') empCode: string, @Res() res: Response){
     const result = await this.employeeService.deleteEmployee(empCode);
-    this.handleResponse(result, res);
+    res = this.handleStatusCode(result, res);
+    res.send(result);
   }
 }

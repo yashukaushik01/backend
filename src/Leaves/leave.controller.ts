@@ -10,33 +10,36 @@ export class LeaveController {
   constructor(private readonly leaveService: LeaveService) {}
 
 
-  handleResponse(result: ResModel, res:Response){
+  handleStatusCode(result: ResModel, res:Response){
     switch (result.statusCode){
       case statusCode.OK:
-        res.status(200).send(result);
+        return res.status(200);
       case statusCode.CREATED:
-        res.status(201).send(result);
+        return res.status(201);
       case statusCode.NO_CONTENT:
-        res.status(204).send(result);
+        return res.status(204);
     }
   }
 
   @Get()
   async getAllLeaves(@Res() res:Response) {
     const result = await this.leaveService.getAllLeaves();
-    this.handleResponse(result, res);
+    res = this.handleStatusCode(result, res);
+    res.send(result);
   }
 
   @Get(':email')
   async getEmployeeLeaves(@Param('email') email: string, @Res() res: Response) {
     const result = await this.leaveService.getEmployeeLeaves(email);
-    this.handleResponse(result, res);
+    res = this.handleStatusCode(result, res);
+    res.send(result);
   }
 
   @Post()
   async addLeave(@Body() completeBody:LeaveAddModel, @Res() res: Response) {
     const result = await this.leaveService.addLeave(completeBody);
-    this.handleResponse(result, res);
+    res = this.handleStatusCode(result, res);
+    res.send(result);
   }
 
   @Put(':leaveId')
@@ -49,6 +52,7 @@ export class LeaveController {
     @Res() res:Response) {
       console.log(body.reasonRejected)
       const result = await this.leaveService.updateLeave(leaveId, body.statusToUpdate, body.reasonRejected);
-      this.handleResponse(result, res);
+      res = this.handleStatusCode(result, res);
+      res.send(result);
   }
 }
